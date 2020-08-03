@@ -2,6 +2,7 @@ import pymongo
 import pprint
 import secrets
 import time
+import base64
 # import redis
 # import matplotlib
 # import bokeh
@@ -40,11 +41,35 @@ print("Time taken: "+str(end - start))
 
 print("Iterating over whole database and filling set.")
 
-scanEntries = randomnessScans.find()
+scanEntries = randomnessScans.find().limit(20)
 
 for scan in scanEntries:
     # Do Statistical tests here.
+    # Use subprocess and invoke DIEHARDER with the appropriate tests.
     name = scan['scanTarget']['hostname']
+    random = scan['result']['report']['extractedRandomList']
+    iv = scan['result']['report']['extractedIVList']
+    session_id = scan['result']['report']['extractedSessionIDList']
+    minimum_reached = False
+
+    if scan['result']['report']['randomMinimalLengthResult'] == "FULFILLED":
+        minimum_reached = True
+
+    random_string = ""
+    if random is not None:
+        for rand in random:
+            random_string = random_string + rand.get('array')
+    if iv is not None:
+        for rand in iv:
+            random_string = random_string + rand.get('array')
+    if session_id is not None:
+        for rand in session_id:
+            random_string = random_string + rand.get('array')
+    if random_string is not None and not "" and minimum_reached:
+        raw_bytes = base64.b16decode(random_string)
+        newFile = open("byteTest.txt", "wb")
+        newFile.write(raw_bytes)
+        print("MonoBit Results for comparison: "+str(scan['result']['report']['monoBitResult']))
     alreadyScanned.add(name)
 
 print("Switching to fetching newest Entry mode.")
