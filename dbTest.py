@@ -3,6 +3,9 @@ import pprint
 import secrets
 import time
 import base64
+import sys
+import os
+import textwrap
 # import redis
 # import matplotlib
 # import bokeh
@@ -41,7 +44,7 @@ print("Time taken: "+str(end - start))
 
 print("Iterating over whole database and filling set.")
 
-scanEntries = randomnessScans.find().limit(20)
+scanEntries = randomnessScans.find().limit(100)
 
 for scan in scanEntries:
     # Do Statistical tests here.
@@ -54,21 +57,29 @@ for scan in scanEntries:
 
     if scan['result']['report']['randomMinimalLengthResult'] == "FULFILLED":
         minimum_reached = True
+        integer_file = open("integer_test.txt", "w")
 
     random_string = ""
     if random is not None:
         for rand in random:
             random_string = random_string + rand.get('array')
+            if minimum_reached:
+                splitter = textwrap.wrap(rand.get('array'), 8)
+                for package in splitter:
+                    converted_int = int(package, 16)
+                    if converted_int > 0x7FFFFFFF:
+                        converted_int -= 0x100000000
+                    integer_file.write(str(converted_int)+"\n")
     if iv is not None:
         for rand in iv:
-            random_string = random_string + rand.get('array')
+            test = random_string + rand.get('array')
     if session_id is not None:
         for rand in session_id:
-            random_string = random_string + rand.get('array')
+            test = random_string + rand.get('array')
     if random_string is not None and not "" and minimum_reached:
-        raw_bytes = base64.b16decode(random_string)
-        newFile = open("byteTest.txt", "wb")
-        newFile.write(raw_bytes)
+        raw_bytes = bytearray.fromhex(random_string)
+        raw_file = open("byteTest.txt", "wb")
+        raw_file.write(raw_bytes)
         print("MonoBit Results for comparison: "+str(scan['result']['report']['monoBitResult']))
     alreadyScanned.add(name)
 
