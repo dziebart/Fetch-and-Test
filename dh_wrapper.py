@@ -109,5 +109,5 @@ class DieHarderWrapper:
         for i in range(0, output.count("FAILED")):
             self.test_results[test_number].append("FAILED")
 
-    def return_results(self):
+    def get_results(self):
         return self.test_results
