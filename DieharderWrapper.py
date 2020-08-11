@@ -6,20 +6,22 @@ def __init__(self):
     self.test_results = populate_test_results()
     self.test_parameters = populate_test_parameters()
 
+
 def populate_test_results(self):
     test_results = dict()
 
-    for i in range(0,18):
-        if i not in range(4,13):
-            test_results[i] = "UNTESTED"
+    for i in range(0, 18):
+        if i not in range(4, 13):
+            test_results[i] = ["UNTESTED"]
 
-    for i in range(100,103):
-        test_results[i] = "UNTESTED"
+    for i in range(100, 103):
+        test_results[i] = ["UNTESTED"]
 
     for i in range(200, 209):
-        test_results[i] = "UNTESTED"
+        test_results[i] = ["UNTESTED"]
 
     return test_results
+
 
 def populate_test_parameters(self):
     test_parameters = dict()
@@ -57,6 +59,18 @@ def populate_test_parameters(self):
     return test_parameters
 
 
+def execute_all_tests(self, filename):
+    for i in range(0, 18):
+        if i not in range(4, 13):
+            execute_test(self, filename)
+
+    for i in range(100, 103):
+        execute_test(self, filename)
+
+    for i in range(200, 209):
+        execute_test(self, filename)
+
+
 def execute_test(self, filename, test_number):
 
     if test_number not in self.test_parameters:
@@ -78,10 +92,17 @@ def execute_test(self, filename, test_number):
 
     output = result.stdout.decode('utf-8')
 
-    # TODO: Some Tests pass out multiple results. Handle these differently.
+    self.test_results[test_number] = []
 
-    if "PASSED" or "WEAK" in output:
-        self.test_results[test_number] = "PASSED"
-    else:
-        self.test_results[test_number] = "FAILED"
+    for i in range(0, output.count("PASSED")):
+        self.test_results[test_number].append("PASSED")
 
+    for i in range(0, output.count("WEAK")):
+        self.test_results[test_number].append("WEAK")
+
+    for i in range(0, output.count("FAILED")):
+        self.test_results[test_number].append("FAILED")
+
+
+def return_results(self):
+    return self.test_results
