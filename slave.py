@@ -142,28 +142,30 @@ class FetchSlave:
         Uses the dieharder wrapper to test the extracted randomness data and save the results to seperate lists. Creates
         a StatisticalResult object, which is the combination of the previous and new results.
         """
-        if os.path.exists(self.hello_random_filename):
+        if os.path.exists(self.hello_random_filename) and self.hello_random is not None and len(self.hello_random) > 0:
             dieharder = DieHarderWrapper(self.hello_random_filename)
             dieharder.execute_all_tests()
             hello_random_results = dieharder.get_results()
         else:
             raise Exception("File "+self.hello_random_filename+" not found.")
 
-        if os.path.exists(self.session_random_filename):
+        if os.path.exists(self.session_random_filename) and self.session_id_random is not None \
+                and len(self.session_id_random) > 0:
             dieharder = DieHarderWrapper(self.session_random_filename)
             dieharder.execute_all_tests()
             session_random_results = dieharder.get_results()
         else:
             raise Exception("File "+self.session_random_filename+" not found.")
 
-        if os.path.exists(self.iv_random_filename):
+        if os.path.exists(self.iv_random_filename) and self.iv_random is not None and len(self.iv_random) > 0:
             dieharder = DieHarderWrapper(self.iv_random_filename)
             dieharder.execute_all_tests()
             iv_random_results = dieharder.get_results()
         else:
             raise Exception("File "+self.iv_random_filename+" not found.")
 
-        if os.path.exists(self.complete_random_filename):
+        if os.path.exists(self.complete_random_filename) and self.complete_sequence is not None \
+                and len(self.complete_sequence) > 0:
             dieharder = DieHarderWrapper(self.complete_random_filename)
             dieharder.execute_all_tests()
             complete_random_results = dieharder.get_results()
