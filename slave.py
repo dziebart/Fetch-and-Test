@@ -88,19 +88,15 @@ class FetchSlave:
                     integer_file_iv.write(str(converted_int) + "\n")
             integer_file_iv.close()
 
-        # constructing the complete sequence
-        for rand, session_id in itertools.zip_longest(self.hello_random, self.session_id_random):
-            append_string = ""
-            if rand is not None:
-                append_string = append_string + rand.get('array')
-            if session_id is not None:
-                append_string = append_string + session_id.get('array')
+        for i in range(0, max(len(self.hello_random), len(self.session_id_random))):
+            if not self.hello_random[i] is None:
+                self.complete_sequence = self.complete_sequence + self.hello_random[i].get('array')
+            if not self.session_id_random[i] is None:
+                self.complete_sequence = self.complete_sequence + self.session_id_random[i].get('array')
 
         for iv in self.iv_random:
             if iv is not None:
-                append_string = append_string + iv.get('array')
-
-        self.complete_sequence = append_string
+                self.complete_sequence = self.complete_sequence + iv.get('array')
 
         # Write File in pack of 4 Bytes
         complete_file = open('/tmp/'+self.host_name+'_complete.RAND', "w")
