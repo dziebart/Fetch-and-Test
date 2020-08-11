@@ -76,7 +76,7 @@ class DieHarderWrapper:
 
     def execute_test(self, test_number):
 
-        if test_number not in self.test_parameters:
+        if test_number not in self.test_parameters.keys():
             print("test number not known / not supported.")
             return
 
