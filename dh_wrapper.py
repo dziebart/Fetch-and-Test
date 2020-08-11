@@ -3,9 +3,13 @@ import subprocess
 
 
 class DieHarderWrapper:
-    def __init__(self):
+    def __init__(self, filename):
         self.test_results = self.populate_test_results()
         self.test_parameters = self.populate_test_parameters()
+        if isinstance(filename, str) and len(filename) > 0:
+            self.filename = filename
+        else:
+            raise Exception("Filepath should be a String with at least one character.")
 
     @staticmethod
     def populate_test_results():
@@ -59,18 +63,18 @@ class DieHarderWrapper:
 
         return test_parameters
 
-    def execute_all_tests(self, filename):
+    def execute_all_tests(self):
         for i in range(0, 18):
             if i not in range(4, 13):
-                self.execute_test(self, filename)
+                self.execute_test(self)
 
         for i in range(100, 103):
-            self.execute_test(self, filename)
+            self.execute_test(self)
 
         for i in range(200, 209):
-            self.execute_test(self, filename)
+            self.execute_test(self)
 
-    def execute_test(self, filename, test_number):
+    def execute_test(self, test_number):
 
         if test_number not in self.test_parameters:
             print("test number not known / not supported.")
@@ -86,7 +90,7 @@ class DieHarderWrapper:
         # Note: -D 256 = only output if Tests are passed/failed or weak
         # Note: -g 202 = Use File-Input and formatted Files fit for Dieharder
         # NOTE: REQUIRES PYTHON 3.5 OR HIGHER!
-        result = subprocess.run("dieharder -D 256 -s 1 -g 202 -f "+filename+" "+parameters, shell=True,
+        result = subprocess.run("dieharder -D 256 -s 1 -g 202 -f "+self.filename+" "+parameters, shell=True,
                                 stdout=subprocess.PIPE)
 
         output = result.stdout.decode('utf-8')
