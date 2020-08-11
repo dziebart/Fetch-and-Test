@@ -7,6 +7,11 @@ from stat_result import StatisticalResults
 class FetchSlave:
 
     def __init__(self, document):
+        """
+        Slave class, which is invoked by the master class and takes a document, which is a representation of a host,
+        defined by previous test results and lists of extracted randomness data.
+        @param document: the mongoDB document representing a scanned host.
+        """
         self.document = document
         self.hello_random = None
         self.session_id_random = None
@@ -28,6 +33,10 @@ class FetchSlave:
         self.clean_up()
 
     def extract_previous_results(self):
+        """
+        Extracts previous test data available in the MongoDB and prepares it for combination with the new
+        test results provided by dieharder.
+        """
         self.previous_results = dict()
 
         self.previous_results["randomDuplicatesResult"] = self.document['result']['report']['randomDuplicatesResult']
@@ -45,6 +54,10 @@ class FetchSlave:
         self.unixTime = self.document['result']['report']['unixtimeResult']
 
     def extract_randoms(self):
+        """
+        Extracts the randomness data from the list of arrays provided by the MongoDB entry. The randomness data is then
+        prepared into distinct lists and written into temporary files for analysis with dieharder.
+        """
         self.hello_random = self.document['result']['report']['extractedRandomList']
         self.session_id_random = self.document['result']['report']['extractedSessionIDList']
         self.iv_random = self.document['result']['report']['extractedIVList']
@@ -112,6 +125,11 @@ class FetchSlave:
 
     @staticmethod
     def write_header(file, number_of_ints):
+        """
+        Writes the header for the file required by dieharder.
+        @param file: file object, which is used to write the header
+        @param number_of_ints: how many integers are listed in the file itself.
+        """
         file.write("#==================================================================\n")
         file.write("# generator online  seed = 0000000\n")
         file.write("#==================================================================\n")
@@ -120,6 +138,10 @@ class FetchSlave:
         file.write("numbit: 32\n")
 
     def test_randoms(self):
+        """
+        Uses the dieharder wrapper to test the extracted randomness data and save the results to seperate lists. Creates
+        a StatisticalResult object, which is the combination of the previous and new results.
+        """
         if os.path.exists(self.hello_random_filename):
             dieharder = DieHarderWrapper(self.hello_random_filename)
             dieharder.execute_all_tests()
@@ -154,6 +176,9 @@ class FetchSlave:
                                                self.unixTime, self.prematureStop)
 
     def clean_up(self):
+        """
+        Removes the temporary files containing the formatted randomn data for dieharder testing.
+        """
         if os.path.exists(self.hello_random_filename):
             os.remove(self.hello_random_filename)
 
@@ -167,4 +192,8 @@ class FetchSlave:
             os.remove(self.complete_random_filename)
 
     def get_results(self):
+        """
+        Returns the StatisticalResults object containg all test data.
+        @return: StatisticalResults object containg all test data.
+        """
         return self.stat_results

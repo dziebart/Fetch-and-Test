@@ -4,6 +4,13 @@ import subprocess
 
 class DieHarderWrapper:
     def __init__(self, filename):
+        """
+        Class, which acts as a wrapper for the Dieharder testing battery. Note, that this class is defined for usage
+        on Linux and will not work when initialized on a windows system. Takes a filename and uses the file for input
+        for the dieharder test battery. NOTE: The file has to be formatted, so that dieharder accepts it. See
+        'man dieharder' for further information.
+        @param filename: The filename/filepath to the file containing the randomness data to test.
+        """
         self.test_results = self.populate_test_results()
         self.test_parameters = self.populate_test_parameters()
         if isinstance(filename, str) and len(filename) > 0:
@@ -13,6 +20,11 @@ class DieHarderWrapper:
 
     @staticmethod
     def populate_test_results():
+        """
+        Initializes the dict with "UNTESTED" Strings to signal, that that particular test was not yet
+        executed.
+        @return: dict filled with "UNTESTED" strings for every test.
+        """
         test_results = dict()
 
         for i in range(0, 18):
@@ -29,6 +41,11 @@ class DieHarderWrapper:
 
     @staticmethod
     def populate_test_parameters():
+        """
+        Fills the test_parameters dict with pre-defined values which relate to parameters for dieharder for
+        each test, specifically selected for the amount of random data we get from the Randomness Scan.
+        @return: the test_parameters dict containing test_parameters for all tests.
+        """
         test_parameters = dict()
 
         # Structure: test_parameters[x] = [a,b,c]
@@ -64,6 +81,9 @@ class DieHarderWrapper:
         return test_parameters
 
     def execute_all_tests(self):
+        """
+        Executes all (supported) dieharder tests on the given file.
+        """
         for i in range(0, 18):
             if i not in range(4, 13):
                 self.execute_test(i)
@@ -75,6 +95,12 @@ class DieHarderWrapper:
             self.execute_test(i)
 
     def execute_test(self, test_number):
+        """
+        Executes a specific test on the given file using the parameters for this specific test. Saves the
+        test results to the test_results dict using "PASSED", "WEAK", or "FAILED". Some Tests can return more
+        than one value, so for some tests the entry in the dict can contain more than one String.
+        @param test_number: the number of the test to be executed (e.g. 0 - 17, 100-102 and 200 - 209)
+        """
 
         if test_number is None:
             raise Exception("No test_number specified. Aborting.")
@@ -110,4 +136,8 @@ class DieHarderWrapper:
             self.test_results[test_number].append("FAILED")
 
     def get_results(self):
+        """
+        returns the test_results dict containing the (currently) calculated test results for the given file.
+        @return: test_results dict containing the current test results.
+        """
         return self.test_results
