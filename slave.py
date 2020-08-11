@@ -77,7 +77,7 @@ class FetchSlave:
 
         if self.iv_random is not None:
             # self.iv_random = []
-            integer_file_iv = open('/tmp'+self.host_name+'_iv.RAND', "w")
+            integer_file_iv = open('/tmp/'+self.host_name+'_iv.RAND', "w")
             number_of_integers = len(self.iv_random) * 4
             self.write_header(integer_file_iv, number_of_integers)
             for rand in self.iv_random:
