@@ -44,7 +44,7 @@ print("Time taken: "+str(end - start))
 
 print("Iterating over whole database and filling set.")
 
-scanEntries = randomnessScans.find().limit(100)
+scanEntries = randomnessScans.find()
 
 for scan in scanEntries:
     # Do Statistical tests here.
@@ -54,33 +54,50 @@ for scan in scanEntries:
     iv = scan['result']['report']['extractedIVList']
     session_id = scan['result']['report']['extractedSessionIDList']
     minimum_reached = False
+    weak_random = False
 
     if scan['result']['report']['randomMinimalLengthResult'] == "FULFILLED":
         minimum_reached = True
-        integer_file = open("integer_test.txt", "w")
+
+
+    if not scan['result']['report']['randomDuplicatesResult'] is None \
+            and not len(scan['result']['report']['randomDuplicatesResult']) == 0:
+        weak_random = True
+        integer_file = open(name+"_int.txt", "w")
+        session_file = open(name+"_session_int.txt", "w")
+        iv_file = open(name+"_iv_int.txt", "w")
+        complete_file = open(name+"_complete_int.txt", "w")
 
     random_string = ""
     if random is not None:
         for rand in random:
             random_string = random_string + rand.get('array')
-            if minimum_reached:
+            if minimum_reached and weak_random:
                 splitter = textwrap.wrap(rand.get('array'), 8)
                 for package in splitter:
                     converted_int = int(package, 16)
-                    if converted_int > 0x7FFFFFFF:
-                        converted_int -= 0x100000000
                     integer_file.write(str(converted_int)+"\n")
     if iv is not None:
         for rand in iv:
-            test = random_string + rand.get('array')
+            random_string = random_string + rand.get('array')
+            if minimum_reached and weak_random and len(rand.get('array')) == 32:
+                splitter = textwrap.wrap(rand.get('array'), 8)
+                for package in splitter:
+                    converted_int = int(package, 16)
+                    iv_file.write(str(converted_int)+"\n")
     if session_id is not None:
         for rand in session_id:
-            test = random_string + rand.get('array')
-    if random_string is not None and not "" and minimum_reached:
+            random_string = random_string + rand.get('array')
+            if minimum_reached and weak_random:
+                splitter = textwrap.wrap(rand.get('array'), 8)
+                for package in splitter:
+                    converted_int = int(package, 16)
+                    session_file.write(str(converted_int)+"\n")
+    if random_string is not None and not "" and minimum_reached and weak_random:
         raw_bytes = bytearray.fromhex(random_string)
         raw_file = open("byteTest.txt", "wb")
         raw_file.write(raw_bytes)
-        print("MonoBit Results for comparison: "+str(scan['result']['report']['monoBitResult']))
+        # print("MonoBit Results for comparison: "+str(scan['result']['report']['monoBitResult']))
     alreadyScanned.add(name)
 
 print("Switching to fetching newest Entry mode.")
