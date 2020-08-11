@@ -44,17 +44,17 @@ class FetchSlave:
         self.unixTime = self.document['result']['report']['unixtimeResult']
 
     def extract_randoms(self):
-        db_rand = self.document['result']['report']['extractedRandomList']
-        db_sess_id = self.document['result']['report']['extractedSessionIDList']
-        db_iv = self.document['result']['report']['extractedIVList']
+        self.hello_random = self.document['result']['report']['extractedRandomList']
+        self.session_id_random = self.document['result']['report']['extractedSessionIDList']
+        self.iv_random = self.document['result']['report']['extractedIVList']
 
         # extracting the random data from the document
-        if db_rand is not None:
+        if self.hello_random is not None:
             # self.hello_random = []
             integer_file_random = open('/tmp/'+self.host_name+'_hello.RAND', "w")
-            number_of_integers = len(db_rand)*8
+            number_of_integers = len(self.hello_random)*8
             self.write_header(integer_file_random, number_of_integers)
-            for rand in db_rand:
+            for rand in self.hello_random:
                 # self.hello_random.append(rand.get('array'))
                 splitter = textwrap.wrap(rand.get('array'), 8)
                 for package in splitter:
@@ -62,12 +62,12 @@ class FetchSlave:
                     integer_file_random.write(str(converted_int) + "\n")
             integer_file_random.close()
 
-        if db_sess_id is not None:
+        if self.session_id_random is not None:
             # self.session_id_random = []
             integer_file_session = open('/tmp/'+self.host_name+'_session.RAND', "w")
-            number_of_integers = len(db_sess_id) * 8
+            number_of_integers = len(self.session_id_random) * 8
             self.write_header(integer_file_session, number_of_integers)
-            for rand in db_sess_id:
+            for rand in self.session_id_random:
                 # self.session_id_random.append(rand.get('array'))
                 splitter = textwrap.wrap(rand.get('array'), 8)
                 for package in splitter:
@@ -75,12 +75,12 @@ class FetchSlave:
                     integer_file_session.write(str(converted_int) + "\n")
             integer_file_session.close()
 
-        if db_iv is not None:
+        if self.iv_random is not None:
             # self.iv_random = []
             integer_file_iv = open('/tmp'+self.host_name+'_iv.RAND', "w")
-            number_of_integers = len(db_iv) * 4
+            number_of_integers = len(self.iv_random) * 4
             self.write_header(integer_file_iv, number_of_integers)
-            for rand in db_iv:
+            for rand in self.iv_random:
                 # self.iv_random.append(rand.get('array'))
                 splitter = textwrap.wrap(rand.get('array'), 8)
                 for package in splitter:
@@ -92,13 +92,13 @@ class FetchSlave:
         for rand, session_id in itertools.zip_longest(self.hello_random, self.session_id_random):
             append_string = ""
             if rand is not None:
-                append_string = append_string + rand
+                append_string = append_string + rand.get('array')
             if session_id is not None:
-                append_string = append_string + session_id
+                append_string = append_string + session_id.get('array')
 
         for iv in self.iv_random:
             if iv is not None:
-                append_string = append_string + iv
+                append_string = append_string + iv.get('array')
 
         self.complete_sequence = append_string
 
