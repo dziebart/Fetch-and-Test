@@ -66,15 +66,18 @@ class DieHarderWrapper:
     def execute_all_tests(self):
         for i in range(0, 18):
             if i not in range(4, 13):
-                self.execute_test(self)
+                self.execute_test(self, i)
 
         for i in range(100, 103):
-            self.execute_test(self)
+            self.execute_test(self, i)
 
         for i in range(200, 209):
-            self.execute_test(self)
+            self.execute_test(self, i)
 
     def execute_test(self, test_number):
+
+        if test_number is None:
+            raise Exception("No test_number specified. Aborting.")
 
         if test_number not in self.test_parameters.keys():
             print("test number not known / not supported.")
