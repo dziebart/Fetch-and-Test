@@ -66,13 +66,13 @@ class DieHarderWrapper:
     def execute_all_tests(self):
         for i in range(0, 18):
             if i not in range(4, 13):
-                self.execute_test(self, i)
+                self.execute_test(i)
 
         for i in range(100, 103):
-            self.execute_test(self, i)
+            self.execute_test(i)
 
         for i in range(200, 209):
-            self.execute_test(self, i)
+            self.execute_test(i)
 
     def execute_test(self, test_number):
 
