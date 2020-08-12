@@ -126,6 +126,10 @@ class DieHarderWrapper:
 
         self.test_results[test_number] = []
 
+        # NOTE: The Results are not ordered in the results. For tests which return more than one value, we can't
+        # reconstruct which value resulted from which particular parameter of that test. But this is also not
+        # required for our evaluation.
+
         for i in range(0, output.count("PASSED")):
             self.test_results[test_number].append("PASSED")
 

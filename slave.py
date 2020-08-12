@@ -66,7 +66,7 @@ class FetchSlave:
         if self.hello_random is not None:
             # self.hello_random = []
             integer_file_random = open(self.hello_random_filename, "w")
-            number_of_integers = len(self.hello_random)*8
+            number_of_integers = len(self.hello_random) * (len(self.hello_random[0].get('array'))/8)
             self.write_header(integer_file_random, number_of_integers)
             for rand in self.hello_random:
                 # self.hello_random.append(rand.get('array'))
@@ -79,7 +79,7 @@ class FetchSlave:
         if self.session_id_random is not None:
             # self.session_id_random = []
             integer_file_session = open(self.session_random_filename, "w")
-            number_of_integers = len(self.session_id_random) * 8
+            number_of_integers = len(self.session_id_random) * (len(self.session_id_random[0].get('array'))/8)
             self.write_header(integer_file_session, number_of_integers)
             for rand in self.session_id_random:
                 # self.session_id_random.append(rand.get('array'))
@@ -92,7 +92,7 @@ class FetchSlave:
         if self.iv_random is not None:
             # self.iv_random = []
             integer_file_iv = open(self.iv_random_filename, "w")
-            number_of_integers = len(self.iv_random) * 4
+            number_of_integers = len(self.iv_random) * (len(self.iv_random[0].get('array'))/8)
             self.write_header(integer_file_iv, number_of_integers)
             for rand in self.iv_random:
                 # self.iv_random.append(rand.get('array'))
@@ -134,7 +134,7 @@ class FetchSlave:
         file.write("# generator online  seed = 0000000\n")
         file.write("#==================================================================\n")
         file.write("type: d\n")
-        file.write("count: " + str(number_of_ints) + "\n")
+        file.write("count: " + str(int(number_of_ints)) + "\n")
         file.write("numbit: 32\n")
 
     def test_randoms(self):
@@ -172,7 +172,7 @@ class FetchSlave:
         else:
             raise Exception("File "+self.complete_random_filename+" not found.")
 
-        self.stat_results = StatisticalResults(self.previous_results, self.template_percentage_map,
+        self.stat_results = StatisticalResults(self.host_name, self.previous_results, self.template_percentage_map,
                                                hello_random_results, session_random_results,
                                                iv_random_results, complete_random_results,
                                                self.unixTime, self.prematureStop)

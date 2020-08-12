@@ -1,5 +1,8 @@
+from sqlalchemy import create_engine
+
 import secrets
 import pymongo
+import sqlalchemy
 import sys
 from multiprocessing import Pool
 
@@ -13,7 +16,7 @@ class Master:
         self.data_base = self.get_data_base(mongo_client)
         self.bulk_size = 20
 
-    def get_data_base(mongo_client):
+    def get_data_base(self, mongo_client):
         test_data_base = mongo_client['randomness-test6']
         randomness_scans = test_data_base['randomness-test6-0']
         return randomness_scans
@@ -39,6 +42,12 @@ class Master:
         # TODO: Create bulk_size threads with one slave for each thread. Execute each slave and wait for
         # TODO: the results and then finally upload the results to new database.
 
+    @staticmethod
+    def connect_to_mysql():
+        engine = create_engine("mysql+mysqlconnector://"+secrets.mySQLUsername+":"
+                               + secrets.mySQLPassword+"@mysql.cs.upb.de/dziebart",
+                               echo=True)
+        return engine
 
 def main():
     master = Master()
