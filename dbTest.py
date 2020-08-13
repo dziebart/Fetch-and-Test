@@ -9,7 +9,7 @@ import textwrap
 # import redis
 # import matplotlib
 # import bokeh
-# seaborn
+# import seaborn
 
 # See https://python-graph-gallery.com/
 mongoClient = pymongo.MongoClient("mongodb://"+secrets.mongoUsername+":"+secrets.mongoPassword+"@cloud.nds.rub.de:42200"
@@ -58,7 +58,6 @@ for scan in scanEntries:
 
     if scan['result']['report']['randomMinimalLengthResult'] == "FULFILLED":
         minimum_reached = True
-
 
     if not scan['result']['report']['randomDuplicatesResult'] is None \
             and not len(scan['result']['report']['randomDuplicatesResult']) == 0:

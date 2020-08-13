@@ -55,10 +55,8 @@ class StatisticalResults:
     def get_template_percentage_map(self):
         return self.template_percentage_map
 
-    def generate_mysql_insert_results(self, database_scheme):
+    def generate_mysql_insert_previous_results(self, database_scheme):
         previous_converted_results = self.convert_previous_results()
-
-        dieharder_converted_results = self.convert_new_results()
 
         inserter = database_scheme.insert().values(host=self.host_name,
                                                    randomDuplicatesResult=previous_converted_results[0],
@@ -68,35 +66,42 @@ class StatisticalResults:
                                                    longestRunBlockResult=previous_converted_results[4],
                                                    fourierResult=previous_converted_results[5],
                                                    templateResult=previous_converted_results[6],
-                                                   entropyResult=previous_converted_results[7],
-                                                   Dieharder_0=dieharder_converted_results[0],
-                                                   Dieharder_1=dieharder_converted_results[1],
-                                                   Dieharder_2=dieharder_converted_results[2],
-                                                   Dieharder_3=dieharder_converted_results[3],
-                                                   Dieharder_13=dieharder_converted_results[4],
-                                                   Dieharder_14=dieharder_converted_results[5],
-                                                   Dieharder_15=dieharder_converted_results[6],
-                                                   Dieharder_16=dieharder_converted_results[7],
-                                                   Dieharder_17=dieharder_converted_results[8],
-                                                   Dieharder_100=dieharder_converted_results[9],
-                                                   Dieharder_101=dieharder_converted_results[10],
-                                                   Dieharder_102=dieharder_converted_results[11],
-                                                   Dieharder_200=dieharder_converted_results[12],
-                                                   Dieharder_201=dieharder_converted_results[13],
-                                                   Dieharder_202=dieharder_converted_results[14],
-                                                   Dieharder_203=dieharder_converted_results[15],
-                                                   Dieharder_204=dieharder_converted_results[16],
-                                                   Dieharder_205=dieharder_converted_results[17],
-                                                   Dieharder_206=dieharder_converted_results[18],
-                                                   Dieharder_207=dieharder_converted_results[19],
-                                                   Dieharder_208=dieharder_converted_results[20])
+                                                   entropyResult=previous_converted_results[7])
+
+        return inserter
+
+    def generate_mysql_insert_new_results(self, database_scheme):
+        dieharder_converted_results = self.convert_new_results()
+
+        inserter = database_scheme.insert().values(host=self.host_name,
+                                                   dieharder_0=dieharder_converted_results[0],
+                                                   dieharder_1=dieharder_converted_results[1],
+                                                   dieharder_2=dieharder_converted_results[2],
+                                                   dieharder_3=dieharder_converted_results[3],
+                                                   dieharder_13=dieharder_converted_results[4],
+                                                   dieharder_14=dieharder_converted_results[5],
+                                                   dieharder_15=dieharder_converted_results[6],
+                                                   dieharder_16=dieharder_converted_results[7],
+                                                   dieharder_17=dieharder_converted_results[8],
+                                                   dieharder_100=dieharder_converted_results[9],
+                                                   dieharder_101=dieharder_converted_results[10],
+                                                   dieharder_102=dieharder_converted_results[11],
+                                                   dieharder_200=dieharder_converted_results[12],
+                                                   dieharder_201=dieharder_converted_results[13],
+                                                   dieharder_202=dieharder_converted_results[14],
+                                                   dieharder_203=dieharder_converted_results[15],
+                                                   dieharder_204=dieharder_converted_results[16],
+                                                   dieharder_205=dieharder_converted_results[17],
+                                                   dieharder_206=dieharder_converted_results[18],
+                                                   dieharder_207=dieharder_converted_results[19],
+                                                   dieharder_208=dieharder_converted_results[20])
 
         return inserter
 
     def generate_mysql_insert_misc(self, database_scheme):
         inserter = database_scheme.insert().values(host=self.host_name,
-                                                   usesUnixTime=self.uses_unix_time,
-                                                   prematureStop=self.premature_stop,
+                                                   uses_unix_time=self.uses_unix_time,
+                                                   premature_stop=self.premature_stop,
                                                    templateRandom=self.template_percentage_map.get("RANDOM"),
                                                    templateSessionId=self.template_percentage_map.get("SESSION_ID"),
                                                    templateIv=self.template_percentage_map.get("IV"),
