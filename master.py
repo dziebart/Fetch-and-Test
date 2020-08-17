@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, MetaData
 
 import secrets
 import pymongo
+import gc
 import sqlalchemy
 import sys
 import multiprocessing
@@ -34,6 +35,7 @@ class Master:
             to_analyze.append(scan.copy())
             if len(to_analyze) >= self.bulk_size:
                 self.bulk_analysis(to_analyze)
+                gc.collect()
                 to_analyze = []
 
         if len(to_analyze) > 0:
@@ -42,8 +44,9 @@ class Master:
         print("Done!")
 
     def bulk_analysis(self, analyze_list):
-        pool = Pool(20)
+        pool = Pool(10)
         result_list = pool.map(self.execute_slave, analyze_list)
+        pool.terminate()
         self.write_results_to_mysql(result_list)
 
     @staticmethod
@@ -53,7 +56,7 @@ class Master:
 
     def write_results_to_mysql(self, stat_results):
         engine = self.connect_to_mysql()
-        meta_data = MetaData(bind=engine, reflect=True)
+        meta_data = MetaData(bind=engine)
 
         for stat in stat_results:
             if stat is None:
