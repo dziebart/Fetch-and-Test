@@ -29,7 +29,7 @@ class Master:
         to_analyze = []
 
         for scan in scan_entries:
-            to_analyze.append(scan)
+            to_analyze.append(scan.copy())
             if len(to_analyze) >= self.bulk_size:
                 self.bulk_analysis(to_analyze)
                 to_analyze = []
@@ -40,7 +40,7 @@ class Master:
         print("Done!")
 
     def bulk_analysis(self, analyze_list):
-        pool = Pool(len(analyze_list))
+        pool = Pool(20)
         result_list = pool.map(self.analyze, analyze_list)
         self.write_results_to_mysql(result_list)
 
