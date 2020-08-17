@@ -131,28 +131,36 @@ class StatisticalResults:
             failed_counter = 0
             test_result_converted = ""
 
-            hello_results = self.hello_random_results.get(test)
+            hello_results = ""
+            if self.hello_random_results is not None:
+                hello_results = self.hello_random_results.get(test)
             passed_counter = hello_results.count("PASSED") + hello_results.count("WEAK")
             failed_counter = hello_results.count("FAILED")
 
             if failed_counter > passed_counter:
                 test_result_converted = test_result_converted + "RANDOM" + "/"
 
-            session_results = self.session_random_results.get(test)
+            session_results = ""
+            if self.session_random_results is not None:
+                session_results = self.session_random_results.get(test)
             passed_counter = session_results.count("PASSED") + session_results.count("WEAK")
             failed_counter = session_results.count("FAILED")
 
             if failed_counter > passed_counter:
                 test_result_converted = test_result_converted + "SESSION_ID" + "/"
 
-            iv_results = self.iv_random_results.get(test)
+            iv_results = ""
+            if self.iv_random_results is not None:
+                iv_results = self.iv_random_results.get(test)
             passed_counter = iv_results.count("PASSED") + iv_results.count("WEAK")
             failed_counter = iv_results.count("FAILED")
 
             if failed_counter > passed_counter:
                 test_result_converted = test_result_converted + "IV" + "/"
 
-            complete_result = self.complete_random_results.get(test)
+            complete_result = ""
+            if self.complete_random_results is not None:
+                complete_result = self.complete_random_results.get(test)
             passed_counter = complete_result.count("PASSED") + complete_result.count("WEAK")
             failed_counter = complete_result.count("FAILED")
 
