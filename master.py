@@ -16,7 +16,7 @@ class Master:
             "mongodb://" + secrets.mongoUsername + ":" + secrets.mongoPassword + "@cloud.nds.rub.de:42200"
                                                                                  "/?authSource=admin")
         self.data_base = self.get_data_base(mongo_client)
-        self.bulk_size = 20
+        self.bulk_size = 10
 
     @staticmethod
     def get_data_base(mongo_client):
