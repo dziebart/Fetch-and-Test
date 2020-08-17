@@ -58,7 +58,7 @@ class Master:
 
     def write_results_to_mysql(self, stat_results):
         engine = self.connect_to_mysql()
-        meta_data = MetaData(bind=engine)
+        meta_data = MetaData(bind=engine, reflect=True)
 
         for stat in stat_results:
             if stat is None:
