@@ -104,7 +104,16 @@ class FetchSlave:
 
         self.complete_sequence = ""
 
-        for i in range(0, max(len(self.hello_random), len(self.session_id_random))):
+        hello_random_length = 0
+        session_id_length = 0
+
+        if self.hello_random is not None:
+            hello_random_length = len(self.hello_random)
+
+        if self.session_id_random is not None:
+            session_id_length = len(self.session_id_random)
+
+        for i in range(0, max(hello_random_length, session_id_length)):
             if not self.hello_random[i] is None:
                 self.complete_sequence = self.complete_sequence + self.hello_random[i].get('array')
             if not self.session_id_random[i] is None:
