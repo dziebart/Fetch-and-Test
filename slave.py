@@ -63,13 +63,14 @@ class FetchSlave:
         self.session_id_random = self.document['result']['report']['extractedSessionIDList']
         self.iv_random = self.document['result']['report']['extractedIVList']
 
-        if (self.hello_random is None or []) and (self.session_id_random is None or []) and \
-                (self.iv_random is None or []):
+        if (self.hello_random is None or len(self.hello_random) == 0) and \
+                (self.session_id_random is None or len(self.session_id_random) == 0) and \
+                (self.iv_random is None or len(self.iv_random) == 0):
             # Nothing to extract.
             return False
 
         # extracting the random data from the document
-        if self.hello_random is not None and self.session_id_random is not []:
+        if self.hello_random is not None and not len(self.hello_random) == 0:
             # self.hello_random = []
             integer_file_random = open(self.hello_random_filename, "w")
             number_of_integers = len(self.hello_random) * (len(self.hello_random[0].get('array'))/8)
@@ -82,7 +83,7 @@ class FetchSlave:
                     integer_file_random.write(str(converted_int) + "\n")
             integer_file_random.close()
 
-        if self.session_id_random is not None and self.session_id_random is not []:
+        if self.session_id_random is not None and not len(self.session_id_random) == 0:
             # self.session_id_random = []
             integer_file_session = open(self.session_random_filename, "w")
             number_of_integers = len(self.session_id_random) * (len(self.session_id_random[0].get('array'))/8)
@@ -95,7 +96,7 @@ class FetchSlave:
                     integer_file_session.write(str(converted_int) + "\n")
             integer_file_session.close()
 
-        if self.iv_random is not None and self.iv_random is not []:
+        if self.iv_random is not None and not len(self.iv_random) == 0:
             # self.iv_random = []
             integer_file_iv = open(self.iv_random_filename, "w")
             number_of_integers = len(self.iv_random) * (len(self.iv_random[0].get('array'))/8)
@@ -120,9 +121,9 @@ class FetchSlave:
             session_id_length = len(self.session_id_random)
 
         for i in range(0, max(hello_random_length, session_id_length)):
-            if not self.hello_random[i] is None:
+            if i < hello_random_length and self.hello_random[i] is not None:
                 self.complete_sequence = self.complete_sequence + self.hello_random[i].get('array')
-            if not self.session_id_random[i] is None:
+            if i < session_id_length and self.session_id_random[i] is not None:
                 self.complete_sequence = self.complete_sequence + self.session_id_random[i].get('array')
 
         if self.iv_random is not None:
