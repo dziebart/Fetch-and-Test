@@ -41,11 +41,11 @@ class Master:
 
     def bulk_analysis(self, analyze_list):
         pool = Pool(20)
-        result_list = pool.map(self.analyze, analyze_list)
+        result_list = pool.map(self.execute_slave, analyze_list)
         self.write_results_to_mysql(result_list)
 
     @staticmethod
-    def analyse(document):
+    def execute_slave(document):
         slave = FetchSlave(document)
         return slave.get_results()
 
