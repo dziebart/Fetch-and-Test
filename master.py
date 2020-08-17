@@ -25,7 +25,9 @@ class Master:
         return randomness_scans
 
     def analyze(self):
-        scan_entries = self.data_base.find().limit(20)
+        # Only return those hosts with enough data collected
+        minimal_length_filter = {'result.report.randomMinimalLengthResult': True}
+        scan_entries = self.data_base.find(minimal_length_filter).limit(20)
         to_analyze = []
 
         for scan in scan_entries:
