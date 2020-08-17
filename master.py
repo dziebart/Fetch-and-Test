@@ -26,7 +26,7 @@ class Master:
 
     def analyze(self):
         # Only return those hosts with enough data collected
-        minimal_length_filter = {'result.report.randomMinimalLengthResult': True}
+        minimal_length_filter = {'result.report.randomMinimalLengthResult': 'FULFILLED'}
         scan_entries = self.data_base.find(minimal_length_filter)
         to_analyze = []
 
