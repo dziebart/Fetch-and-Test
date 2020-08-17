@@ -63,12 +63,13 @@ class FetchSlave:
         self.session_id_random = self.document['result']['report']['extractedSessionIDList']
         self.iv_random = self.document['result']['report']['extractedIVList']
 
-        if self.hello_random is None and self.session_id_random is None and self.iv_random is None:
+        if (self.hello_random is None or []) and (self.session_id_random is None or []) and \
+                (self.iv_random is None or []):
             # Nothing to extract.
             return False
 
         # extracting the random data from the document
-        if self.hello_random is not None:
+        if self.hello_random is not None and self.session_id_random is not []:
             # self.hello_random = []
             integer_file_random = open(self.hello_random_filename, "w")
             number_of_integers = len(self.hello_random) * (len(self.hello_random[0].get('array'))/8)
@@ -81,7 +82,7 @@ class FetchSlave:
                     integer_file_random.write(str(converted_int) + "\n")
             integer_file_random.close()
 
-        if self.session_id_random is not None:
+        if self.session_id_random is not None and self.session_id_random is not []:
             # self.session_id_random = []
             integer_file_session = open(self.session_random_filename, "w")
             number_of_integers = len(self.session_id_random) * (len(self.session_id_random[0].get('array'))/8)
@@ -94,7 +95,7 @@ class FetchSlave:
                     integer_file_session.write(str(converted_int) + "\n")
             integer_file_session.close()
 
-        if self.iv_random is not None:
+        if self.iv_random is not None and self.iv_random is not []:
             # self.iv_random = []
             integer_file_iv = open(self.iv_random_filename, "w")
             number_of_integers = len(self.iv_random) * (len(self.iv_random[0].get('array'))/8)
