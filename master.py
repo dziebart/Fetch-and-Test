@@ -3,12 +3,14 @@ from sqlalchemy import create_engine, MetaData
 import secrets
 import pymongo
 import gc
+import logging
 import sqlalchemy
 import sys
 import multiprocessing
 from slave import FetchSlave
 from multiprocessing import Pool
 
+logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 class Master:
 
@@ -81,8 +83,7 @@ class Master:
     @staticmethod
     def connect_to_mysql():
         engine = create_engine("mysql+mysqlconnector://"+secrets.mySQLUsername+":"
-                               + secrets.mySQLPassword+"@mysql.cs.upb.de/dziebart",
-                               echo=True)
+                               + secrets.mySQLPassword+"@mysql.cs.upb.de/dziebart")
         return engine
 
 
