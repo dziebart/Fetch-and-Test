@@ -45,9 +45,9 @@ class Master:
         self.write_results_to_mysql(result_list)
 
     @staticmethod
-    def analyse(document, result_queue):
+    def analyse(document):
         slave = FetchSlave(document)
-        result_queue.put(slave.get_results())
+        return slave.get_results()
 
     def write_results_to_mysql(self, stat_results):
         engine = self.connect_to_mysql()
