@@ -124,7 +124,9 @@ class StatisticalResults:
     def convert_new_results(self):
         results = []
 
-        for test in self.hello_random_results:
+
+
+        for test in self.complete_random_results:
             # Do some simple "flattening"
             # i.e. when there are more "PASSED" than "FAILED", pass the test and set result to "PASSED"
             passed_counter = 0
