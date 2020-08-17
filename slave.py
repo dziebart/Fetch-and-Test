@@ -28,8 +28,9 @@ class FetchSlave:
         self.prematureStop = None
         self.stat_results = None
         self.extract_previous_results()
-        self.extract_randoms()
-        self.test_randoms()
+        successful = self.extract_randoms()
+        if successful:
+            self.test_randoms()
         self.clean_up()
 
     def extract_previous_results(self):
@@ -61,6 +62,10 @@ class FetchSlave:
         self.hello_random = self.document['result']['report']['extractedRandomList']
         self.session_id_random = self.document['result']['report']['extractedSessionIDList']
         self.iv_random = self.document['result']['report']['extractedIVList']
+
+        if self.hello_random is None and self.session_id_random is None and self.iv_random is None:
+            # Nothing to extract.
+            return False
 
         # extracting the random data from the document
         if self.hello_random is not None:
@@ -132,6 +137,8 @@ class FetchSlave:
             converted_int = int(package, 16)
             complete_file.write(str(converted_int)+'\n')
         complete_file.close()
+
+        return True
 
     @staticmethod
     def write_header(file, number_of_ints):

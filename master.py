@@ -54,6 +54,9 @@ class Master:
         meta_data = MetaData(bind=engine, reflect=True)
 
         for stat in stat_results:
+            if stat is None:
+                continue
+                
             conn = engine.connect()
 
             inserter_old = stat.generate_mysql_insert_previous_results(meta_data.tables['previous_results'])
