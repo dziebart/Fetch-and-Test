@@ -19,7 +19,7 @@ class Master:
         self.bulk_size = 20
 
     @staticmethod
-    def get_data_base(self, mongo_client):
+    def get_data_base(mongo_client):
         test_data_base = mongo_client['randomness-test6']
         randomness_scans = test_data_base['randomness-test6-0']
         return randomness_scans
@@ -76,6 +76,7 @@ class Master:
                                + secrets.mySQLPassword+"@mysql.cs.upb.de/dziebart",
                                echo=True)
         return engine
+
 
 def main():
     master = Master()
