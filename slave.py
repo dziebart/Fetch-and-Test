@@ -119,9 +119,10 @@ class FetchSlave:
             if not self.session_id_random[i] is None:
                 self.complete_sequence = self.complete_sequence + self.session_id_random[i].get('array')
 
-        for iv in self.iv_random:
-            if iv is not None:
-                self.complete_sequence = self.complete_sequence + iv.get('array')
+        if self.iv_random is not None:
+            for iv in self.iv_random:
+                if iv is not None:
+                    self.complete_sequence = self.complete_sequence + iv.get('array')
 
         # Write File in pack of 4 Bytes
         complete_file = open(self.complete_random_filename, "w")
