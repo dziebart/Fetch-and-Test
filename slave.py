@@ -161,6 +161,11 @@ class FetchSlave:
         Uses the dieharder wrapper to test the extracted randomness data and save the results to seperate lists. Creates
         a StatisticalResult object, which is the combination of the previous and new results.
         """
+        hello_random_results = None
+        session_random_results = None
+        iv_random_results = None
+        complete_random_results = None
+
         if os.path.exists(self.hello_random_filename) and self.hello_random is not None and len(self.hello_random) > 0:
             dieharder = DieHarderWrapper(self.hello_random_filename)
             dieharder.execute_all_tests()
