@@ -13,6 +13,7 @@ class DieHarderWrapper:
         """
         self.test_results = self.populate_test_results()
         self.test_parameters = self.populate_test_parameters()
+        self.timeout = 100
         if isinstance(filename, str) and len(filename) > 0:
             self.filename = filename
         else:
@@ -119,7 +120,8 @@ class DieHarderWrapper:
         # Note: -D 256 = only output if Tests are passed/failed or weak
         # Note: -g 202 = Use File-Input and formatted Files fit for Dieharder
         # NOTE: REQUIRES PYTHON 3.5 OR HIGHER!
-        result = subprocess.run("dieharder -D 256 -s 1 -g 202 -f "+self.filename+" "+parameters, shell=True,
+        result = subprocess.run("timeout "+str(self.timeout)+" dieharder -D 256 -s 1 -g 202 -f "
+                                + self.filename+" "+parameters, shell=True,
                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         output = result.stdout.decode('utf-8')
