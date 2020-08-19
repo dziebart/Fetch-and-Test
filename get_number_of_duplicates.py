@@ -15,11 +15,11 @@ test_filter = {
 scanEntries = randomnessScans.find(test_filter)
 
 list_of_randoms = set()
-list_of_duplicates = set()
+list_of_duplicates = dict()
 
 for scan in scanEntries:
     random = scan['result']['report']['extractedRandomList']
-    list_of_current_randoms = set()
+    hostname = scan['scanTarget']['hostname']
 
     if random is not None:
         for rand in random:
@@ -27,11 +27,11 @@ for scan in scanEntries:
             if random_bytes not in list_of_randoms:
                 list_of_randoms.add(random_bytes)
             else:
-                if random_bytes not in list_of_current_randoms:
-                    # Cross host duplicates and not duplicates on this host
-                    list_of_duplicates.add(random_bytes)
-
-            list_of_current_randoms.add(random_bytes)
+                if random_bytes in list_of_duplicates:
+                    if hostname not in list_of_duplicates.get(random_bytes):
+                        list_of_duplicates.get(random_bytes).append(hostname)
+                else:
+                    list_of_duplicates[random_bytes] = [hostname]
 
 testDataBase = mongoClient['randomness-test6']
 
@@ -46,7 +46,7 @@ scanEntries = randomnessScans.find(test_filter)
 
 for scan in scanEntries:
     random = scan['result']['report']['extractedRandomList']
-    list_of_current_randoms = set()
+    hostname = scan['scanTarget']['hostname']
 
     if random is not None:
         for rand in random:
@@ -54,11 +54,11 @@ for scan in scanEntries:
             if random_bytes not in list_of_randoms:
                 list_of_randoms.add(random_bytes)
             else:
-                if random_bytes not in list_of_current_randoms:
-                    # Cross host duplicates and not duplicates on this host
-                    list_of_duplicates.add(random_bytes)
-
-            list_of_current_randoms.add(random_bytes)
+                if random_bytes in list_of_duplicates:
+                    if hostname not in list_of_duplicates.get(random_bytes):
+                        list_of_duplicates.get(random_bytes).append(hostname)
+                else:
+                    list_of_duplicates[random_bytes] = [hostname]
 
 print(str(list_of_duplicates))
 
