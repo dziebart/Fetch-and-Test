@@ -60,5 +60,9 @@ for scan in scanEntries:
                 else:
                     list_of_duplicates[random_bytes] = [hostname]
 
-print(str(list_of_duplicates))
+for random in list_of_duplicates:
+    if len(list_of_duplicates[random]) > 1:
+        print(random)
+
+print("Done Scanning for duplicates.")
 
